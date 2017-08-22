@@ -44,6 +44,34 @@ BinarySearchTreeNode* BinarySearchTree::Insert(BinarySearchTreeNode* node, int k
 	return node;
 }
 
+// Searches for the specified key from the specified BST node
+// Returns null if the key is not found in the BST
+// Otherwise returns the node containing the key
+BinarySearchTreeNode * BinarySearchTree::FindKey(BinarySearchTreeNode* node, int key)
+{
+	if (node == NULL)
+	{
+		// The node is NULL, so the key doesn't exist in the BST
+		// return NULL to indicate this
+		return node;
+	}
+	else if (node->key < key)
+	{
+		// Traverse right
+		return FindKey(node->right, key);
+	}
+	else if (node->key > key)
+	{
+		// Traverse left
+		return FindKey(node->left, key);
+	}
+	else
+	{
+		// We found a node that has a key matching the specified key, so return the node
+		return node;
+	}
+}
+
 // Creates a new node struct for the BST
 BinarySearchTreeNode* BinarySearchTree::CreateNewNode(int key)
 {
