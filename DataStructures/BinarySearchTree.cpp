@@ -53,3 +53,32 @@ BinarySearchTreeNode* BinarySearchTree::CreateNewNode(int key)
 	returnNode->right = NULL;
 	return returnNode;
 }
+
+// Returns true if the specified key exists in the binary search tree
+// If not, false
+// This function is recursive
+bool BinarySearchTree::ContainsKey(BinarySearchTreeNode* node, int key)
+{
+	// If we have hit a null node, the key doesn't exist in the BST
+	if (node == NULL)
+	{
+		return false;
+	}
+
+	// Otherwise, check if we need to traverse further down the tree
+	if (key < node->key)
+	{
+		// The key must be to the left, so continue down that path
+		return ContainsKey(node->left, key);
+	}
+	else if (key > node->key)
+	{
+		// The key must be to the right, so continue down that path
+		return ContainsKey(node->right, key);
+	}
+	else
+	{
+		// The current node is the key
+		return false;
+	}
+}
