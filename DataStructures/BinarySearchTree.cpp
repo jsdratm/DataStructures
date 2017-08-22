@@ -44,6 +44,65 @@ BinarySearchTreeNode* BinarySearchTree::Insert(BinarySearchTreeNode* node, int k
 	return node;
 }
 
+// Deletes the node with the specified key from the BST passed in
+// Returns the new BST root since the one passed in may no longer exist
+BinarySearchTreeNode* BinarySearchTree::Delete(BinarySearchTreeNode* node, int key)
+{
+	// If the node passed in is null, we can't do anything except return it
+	if (node == NULL)
+	{
+		return node;
+	}
+
+	if (key < node->key)
+	{
+		// The key is to the left of the passed in node, so continue traversing until it is found
+		node->left = Delete(node->left, key);
+	}
+	else if (key > node->key)
+	{
+		// The key is to the right of the passed in node, so continue traversing until it is found
+		node->right = Delete(node->right, key);
+	}
+	else
+	{
+		// The key to be deleted matches the current node, so time to do some deletin'
+		if (node->left == NULL && node->right == NULL)
+		{
+			// In this case, the node to be deleted has no children, so it can just be deleted without worrying about children
+			free(node);
+			return NULL;
+		}
+		else if (node->left == NULL)
+		{
+			// In this case, the left child node is null and the right child node is not null
+			// We are going to make the right child node replace the current node that we are deleting
+			struct BinarySearchTreeNode* tempNode = node->right;
+			free(node);
+			return tempNode;
+		}
+		else if (node->right == NULL)
+		{
+			// In this case, the right child node is null and the left child node is not null
+			// We are going to make the left child node replace the current node that we are deleting
+			struct BinarySearchTreeNode* tempNode = node->left;
+			free(node);
+			return tempNode;
+		}
+		else
+		{
+			// In this case, the node to be deleted has two children (left and right)
+			// We must find the smallest node on the right hand side to replact the node that is being deleted
+			// This will maintain the correct BST hierarchy
+			struct BinarySearchTreeNode* tempNode = GetMinimumValueNode(node->right);
+			node->key = tempNode->key;
+			node->right = Delete(node->right, tempNode->key);
+		}
+	}
+
+	return node;
+}
+
 // Searches for the specified key from the specified BST node
 // Returns null if the key is not found in the BST
 // Otherwise returns the node containing the key
@@ -80,6 +139,34 @@ BinarySearchTreeNode* BinarySearchTree::CreateNewNode(int key)
 	returnNode->left = NULL;
 	returnNode->right = NULL;
 	return returnNode;
+}
+
+// Returns the node in the tree with the minimum (lowest) value
+// If the node passed in is NULL or the minimum, it will be returned
+BinarySearchTreeNode* BinarySearchTree::GetMinimumValueNode(BinarySearchTreeNode* node)
+{
+	struct BinarySearchTreeNode* currentNode = node;
+
+	while (currentNode->left != NULL)
+	{
+		currentNode = currentNode->left;
+	}
+
+	return currentNode;
+}
+
+// Returns the node in the tree with the maximum (highest) value
+// If the node passed in is NULL or the maximum, it will be returned
+BinarySearchTreeNode* BinarySearchTree::GetMaximumValueNode(BinarySearchTreeNode* node)
+{
+	struct BinarySearchTreeNode* currentNode = node;
+
+	while (currentNode->right != NULL)
+	{
+		currentNode = currentNode->right;
+	}
+
+	return currentNode;
 }
 
 // Returns true if the specified key exists in the binary search tree
