@@ -38,6 +38,8 @@ void main()
 	cout << binaryTree->ContainsKey(2);
 	cout << binaryTree->ContainsKey(3);
 	cout << endl;
+
+	delete binaryTree;
 	
 	int x;
 	cin >> x;
