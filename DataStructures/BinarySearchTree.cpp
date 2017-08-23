@@ -2,7 +2,6 @@
 #include<stdio.h>
 #include<stdlib.h>
 
-
 // Constructor
 BinarySearchTree::BinarySearchTree()
 {
@@ -16,13 +15,30 @@ BinarySearchTree::~BinarySearchTree()
 }
 
 // Inserts a new node into the BST in the proper location
+BinarySearchTreeNode* BinarySearchTree::Insert(int key)
+{
+	BinarySearchTreeNode* returnNode = Insert(root, key);
+
+	if (root == NULL)
+	{
+		root = returnNode;
+	}
+
+	return returnNode;
+}
+
+// Inserts a new node into the BST in the proper location
 // This function is recursive
 BinarySearchTreeNode* BinarySearchTree::Insert(BinarySearchTreeNode* node, int key)
 {
 	// Check if we have reached the end of the tree and, if so, create a new node for this key
 	if (node == NULL)
 	{
-		return CreateNewNode(key);
+		struct BinarySearchTreeNode* returnNode = (struct BinarySearchTreeNode*)malloc(sizeof(struct BinarySearchTreeNode));
+		returnNode->key = key;
+		returnNode->left = NULL;
+		returnNode->right = NULL;
+		return returnNode;
 	}
 
 	// Otherwise, continue traversing down the tree.
@@ -42,6 +58,21 @@ BinarySearchTreeNode* BinarySearchTree::Insert(BinarySearchTreeNode* node, int k
 	}
 
 	return node;
+}
+
+// Deletes the node with the specified key from the BST passed in
+// Returns the new BST root since the one passed in may no longer exist
+BinarySearchTreeNode* BinarySearchTree::Delete(int key)
+{
+	if (root != NULL && key == root->key)
+	{
+		root = Delete(root, key);
+		return root;
+	}
+	else
+	{
+		return Delete(root, key);
+	}	
 }
 
 // Deletes the node with the specified key from the BST passed in
@@ -106,7 +137,15 @@ BinarySearchTreeNode* BinarySearchTree::Delete(BinarySearchTreeNode* node, int k
 // Searches for the specified key from the specified BST node
 // Returns null if the key is not found in the BST
 // Otherwise returns the node containing the key
-BinarySearchTreeNode * BinarySearchTree::FindKey(BinarySearchTreeNode* node, int key)
+BinarySearchTreeNode* BinarySearchTree::Search(int key)
+{
+	return Search(root, key);
+}
+
+// Searches for the specified key from the specified BST node
+// Returns null if the key is not found in the BST
+// Otherwise returns the node containing the key
+BinarySearchTreeNode* BinarySearchTree::Search(BinarySearchTreeNode* node, int key)
 {
 	if (node == NULL)
 	{
@@ -117,12 +156,12 @@ BinarySearchTreeNode * BinarySearchTree::FindKey(BinarySearchTreeNode* node, int
 	else if (node->key < key)
 	{
 		// Traverse right
-		return FindKey(node->right, key);
+		return Search(node->right, key);
 	}
 	else if (node->key > key)
 	{
 		// Traverse left
-		return FindKey(node->left, key);
+		return Search(node->left, key);
 	}
 	else
 	{
@@ -131,14 +170,11 @@ BinarySearchTreeNode * BinarySearchTree::FindKey(BinarySearchTreeNode* node, int
 	}
 }
 
-// Creates a new node struct for the BST
-BinarySearchTreeNode* BinarySearchTree::CreateNewNode(int key)
+// Returns the node in the tree with the minimum (lowest) value
+// If the node passed in is NULL or the minimum, it will be returned
+BinarySearchTreeNode* BinarySearchTree::GetMinimumValueNode()
 {
-	struct BinarySearchTreeNode* returnNode = (struct BinarySearchTreeNode*)malloc(sizeof(struct BinarySearchTreeNode));
-	returnNode->key = key;
-	returnNode->left = NULL;
-	returnNode->right = NULL;
-	return returnNode;
+	return GetMinimumValueNode(root);
 }
 
 // Returns the node in the tree with the minimum (lowest) value
@@ -157,6 +193,13 @@ BinarySearchTreeNode* BinarySearchTree::GetMinimumValueNode(BinarySearchTreeNode
 
 // Returns the node in the tree with the maximum (highest) value
 // If the node passed in is NULL or the maximum, it will be returned
+BinarySearchTreeNode* BinarySearchTree::GetMaximumValueNode()
+{
+	return GetMaximumValueNode(root);
+}
+
+// Returns the node in the tree with the maximum (highest) value
+// If the node passed in is NULL or the maximum, it will be returned
 BinarySearchTreeNode* BinarySearchTree::GetMaximumValueNode(BinarySearchTreeNode* node)
 {
 	struct BinarySearchTreeNode* currentNode = node;
@@ -167,6 +210,13 @@ BinarySearchTreeNode* BinarySearchTree::GetMaximumValueNode(BinarySearchTreeNode
 	}
 
 	return currentNode;
+}
+
+// Returns true if the specified key exists in the binary search tree
+// If not, false
+bool BinarySearchTree::ContainsKey(int key)
+{
+	return ContainsKey(root, key);
 }
 
 // Returns true if the specified key exists in the binary search tree
@@ -194,6 +244,6 @@ bool BinarySearchTree::ContainsKey(BinarySearchTreeNode* node, int key)
 	else
 	{
 		// The current node is the key
-		return false;
+		return true;
 	}
 }
